@@ -94,8 +94,8 @@ NEORV32_VC709/
 - Serial terminal (Tera Term)
 
 ### Setup (10 minutes)
-See detailed guides in `Documentation/`
-Follow instruction in the first documentation `ENVIRONMENT_Toolchain_Bootloader`
+See detailed guides in the [Documentation](Documentation) folder  
+Follow instruction in the first documentation [ENVIRONMENT_Toolchain_Bootloader.md](Documentation\ENVIRONMENT_Toolchain_Bootloader.md)
 
 ---
 
@@ -148,6 +148,7 @@ Follow instruction in the first documentation `ENVIRONMENT_Toolchain_Bootloader`
 
 ### Tools
 - **RISC-V GCC Toolchain**: https://github.com/stnolting/riscv-gcc-prebuilt
+- **Bootloader Upload Tool**: https://github.com/Damien-Bureau/neorv32-serial-runner
 
 ---
 
