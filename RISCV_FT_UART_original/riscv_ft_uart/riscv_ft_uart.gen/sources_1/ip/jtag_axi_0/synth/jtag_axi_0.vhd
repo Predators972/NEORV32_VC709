@@ -1,5 +1,5 @@
 -- (c) Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
--- (c) Copyright 2022-2024 Advanced Micro Devices, Inc. All rights reserved.
+-- (c) Copyright 2022-2026 Advanced Micro Devices, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of AMD and is protected under U.S. and international copyright
@@ -47,14 +47,14 @@
 -- DO NOT MODIFY THIS FILE.
 
 -- IP VLNV: xilinx.com:ip:jtag_axi:1.2
--- IP Revision: 18
+-- IP Revision: 20
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 
 LIBRARY jtag_axi;
-USE jtag_axi.jtag_axi_v1_2_18_jtag_axi;
+USE jtag_axi.jtag_axi_v1_2_20_jtag_axi;
 
 ENTITY jtag_axi_0 IS
   PORT (
@@ -85,7 +85,7 @@ END jtag_axi_0;
 ARCHITECTURE jtag_axi_0_arch OF jtag_axi_0 IS
   ATTRIBUTE DowngradeIPIdentifiedWarnings : STRING;
   ATTRIBUTE DowngradeIPIdentifiedWarnings OF jtag_axi_0_arch: ARCHITECTURE IS "yes";
-  COMPONENT jtag_axi_v1_2_18_jtag_axi IS
+  COMPONENT jtag_axi_v1_2_20_jtag_axi IS
     GENERIC (
       RD_TXN_QUEUE_LENGTH : INTEGER;
       WR_TXN_QUEUE_LENGTH : INTEGER;
@@ -137,26 +137,30 @@ ARCHITECTURE jtag_axi_0_arch OF jtag_axi_0 IS
       m_axi_rvalid : IN STD_LOGIC;
       m_axi_rready : OUT STD_LOGIC
     );
-  END COMPONENT jtag_axi_v1_2_18_jtag_axi;
+  END COMPONENT jtag_axi_v1_2_20_jtag_axi;
   ATTRIBUTE X_CORE_INFO : STRING;
-  ATTRIBUTE X_CORE_INFO OF jtag_axi_0_arch: ARCHITECTURE IS "jtag_axi_v1_2_18_jtag_axi,Vivado 2023.2";
+  ATTRIBUTE X_CORE_INFO OF jtag_axi_0_arch: ARCHITECTURE IS "jtag_axi_v1_2_20_jtag_axi,Vivado 2024.2";
   ATTRIBUTE CHECK_LICENSE_TYPE : STRING;
-  ATTRIBUTE CHECK_LICENSE_TYPE OF jtag_axi_0_arch : ARCHITECTURE IS "jtag_axi_0,jtag_axi_v1_2_18_jtag_axi,{}";
+  ATTRIBUTE CHECK_LICENSE_TYPE OF jtag_axi_0_arch : ARCHITECTURE IS "jtag_axi_0,jtag_axi_v1_2_20_jtag_axi,{}";
   ATTRIBUTE CORE_GENERATION_INFO : STRING;
-  ATTRIBUTE CORE_GENERATION_INFO OF jtag_axi_0_arch: ARCHITECTURE IS "jtag_axi_0,jtag_axi_v1_2_18_jtag_axi,{x_ipProduct=Vivado 2023.2,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=jtag_axi,x_ipVersion=1.2,x_ipCoreRevision=18,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,RD_TXN_QUEUE_LENGTH=1,WR_TXN_QUEUE_LENGTH=1,M_AXI_ID_WIDTH=1,M_AXI_ADDR_WIDTH=32,FAMILY=virtex7,M_AXI_DATA_WIDTH=32,M_HAS_BURST=1,PROTOCOL=2}";
+  ATTRIBUTE CORE_GENERATION_INFO OF jtag_axi_0_arch: ARCHITECTURE IS "jtag_axi_0,jtag_axi_v1_2_20_jtag_axi,{x_ipProduct=Vivado 2024.2,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=jtag_axi,x_ipVersion=1.2,x_ipCoreRevision=20,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,RD_TXN_QUEUE_LENGTH=1,WR_TXN_QUEUE_LENGTH=1,M_AXI_ID_WIDTH=1,M_AXI_ADDR_WIDTH=32,FAMILY=virtex7,M_AXI_DATA_WIDTH=32,M_HAS_BURST=1,PROTOCOL=2}";
   ATTRIBUTE X_INTERFACE_INFO : STRING;
+  ATTRIBUTE X_INTERFACE_MODE : STRING;
   ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
-  ATTRIBUTE X_INTERFACE_PARAMETER OF aclk: SIGNAL IS "XIL_INTERFACENAME signal_clock, ASSOCIATED_BUSIF M_AXI, ASSOCIATED_RESET aresetn, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, INSERT_VIP 0";
   ATTRIBUTE X_INTERFACE_INFO OF aclk: SIGNAL IS "xilinx.com:signal:clock:1.0 signal_clock CLK";
-  ATTRIBUTE X_INTERFACE_PARAMETER OF aresetn: SIGNAL IS "XIL_INTERFACENAME signal_reset, POLARITY ACTIVE_LOW, INSERT_VIP 0";
+  ATTRIBUTE X_INTERFACE_MODE OF aclk: SIGNAL IS "slave signal_clock";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF aclk: SIGNAL IS "XIL_INTERFACENAME signal_clock, ASSOCIATED_BUSIF M_AXI, ASSOCIATED_RESET aresetn, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, PHASE 0.0, INSERT_VIP 0";
   ATTRIBUTE X_INTERFACE_INFO OF aresetn: SIGNAL IS "xilinx.com:signal:reset:1.0 signal_reset RST";
+  ATTRIBUTE X_INTERFACE_MODE OF aresetn: SIGNAL IS "slave signal_reset";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF aresetn: SIGNAL IS "XIL_INTERFACENAME signal_reset, POLARITY ACTIVE_LOW, INSERT_VIP 0";
   ATTRIBUTE X_INTERFACE_INFO OF m_axi_araddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI ARADDR";
   ATTRIBUTE X_INTERFACE_INFO OF m_axi_arprot: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI ARPROT";
   ATTRIBUTE X_INTERFACE_INFO OF m_axi_arready: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI ARREADY";
   ATTRIBUTE X_INTERFACE_INFO OF m_axi_arvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI ARVALID";
+  ATTRIBUTE X_INTERFACE_INFO OF m_axi_awaddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI AWADDR";
+  ATTRIBUTE X_INTERFACE_MODE OF m_axi_awaddr: SIGNAL IS "master M_AXI";
   ATTRIBUTE X_INTERFACE_PARAMETER OF m_axi_awaddr: SIGNAL IS "XIL_INTERFACENAME M_AXI, AWUSER_WIDTH 0, ARUSER_WIDTH 0, WUSER_WIDTH 0, BUSER_WIDTH 0, RUSER_WIDTH 0, SUPPORTS_NARROW_BURST 0, DATA_WIDTH 32, PROTOCOL AXI4LITE, FREQ_HZ 100000000, ID_WIDTH 0, ADDR_WIDTH 32, READ_WRITE_MODE READ_WRITE, HAS_BURST 0, HAS_LOCK 0, HAS_PROT 1, HAS_CACHE 0, HAS_QOS 0, HAS_REGION 0, HAS_WSTRB 1, HAS_BRESP 1, HAS_RRESP 1, NUM_READ_OUTSTANDING 1, NUM_WRITE_OUTSTANDING 1, MAX_BURST_LENGTH 1, PHASE 0.0, NUM_READ_THREADS 1, NUM_WRITE_THREADS 1, RUSER_BITS_PER_BYTE 0, WUSER_B" & 
 "ITS_PER_BYTE 0, INSERT_VIP 0";
-  ATTRIBUTE X_INTERFACE_INFO OF m_axi_awaddr: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI AWADDR";
   ATTRIBUTE X_INTERFACE_INFO OF m_axi_awprot: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI AWPROT";
   ATTRIBUTE X_INTERFACE_INFO OF m_axi_awready: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI AWREADY";
   ATTRIBUTE X_INTERFACE_INFO OF m_axi_awvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI AWVALID";
@@ -172,7 +176,7 @@ ARCHITECTURE jtag_axi_0_arch OF jtag_axi_0 IS
   ATTRIBUTE X_INTERFACE_INFO OF m_axi_wstrb: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI WSTRB";
   ATTRIBUTE X_INTERFACE_INFO OF m_axi_wvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 M_AXI WVALID";
 BEGIN
-  U0 : jtag_axi_v1_2_18_jtag_axi
+  U0 : jtag_axi_v1_2_20_jtag_axi
     GENERIC MAP (
       RD_TXN_QUEUE_LENGTH => 1,
       WR_TXN_QUEUE_LENGTH => 1,

@@ -160,6 +160,7 @@ component neorv32_test_setup_bootloader is
     rstn_i      : in  std_ulogic; -- global reset, low-active, async
     -- GPIO --
     gpio_o      : out std_ulogic_vector(7 downto 0); -- parallel output
+    gpio_i      : in std_ulogic_vector(63 downto 0); -- parallel intput (NEW - for ADC)
 	----------------fault injection control signals-----------------
     in_comb_fault_inj_en  : in comb_fault_enable_t;
     in_sync_fault_inj_en  : in sync_fault_enable_t;

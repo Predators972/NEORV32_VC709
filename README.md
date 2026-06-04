@@ -1,10 +1,10 @@
-\# RISC-V Processor Benchmarking on FPGA
+# RISC-V Processor Benchmarking on FPGA
 
 
 
-\## Project Overview
+## Project Overview
 
 
 
-This repository contains a \*\*Summer Internship Project\*\* focused on \*\*developing and evaluating signal processing applications on a RISC-V processor\*\* implemented on an FPGA platform.
+This repository contains a **Summer Internship Project** focused on **developing and evaluating signal processing applications on a RISC-V processor** implemented on an FPGA platform.
 

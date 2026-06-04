@@ -104,6 +104,7 @@ entity neorv32_test_setup_bootloader is
     rstn_i      : in  std_ulogic; -- global reset, low-active, async
     -- GPIO --
     gpio_o      : out std_ulogic_vector(7 downto 0); -- parallel output
+    gpio_i      : in std_ulogic_vector(63 downto 0); -- parallel intput (NEW - for ADC)
 	----------------fault injection control signals-----------------
     in_comb_fault_inj_en  : in comb_fault_enable_t;
     in_sync_fault_inj_en  : in sync_fault_enable_t;
@@ -193,7 +194,7 @@ begin
     MEM_INT_DMEM_EN              => true,              -- implement processor-internal data memory
     MEM_INT_DMEM_SIZE            => MEM_INT_DMEM_SIZE, -- size of processor-internal data memory in bytes
     -- Processor peripherals --
-    IO_GPIO_NUM                  => 8,                 -- number of GPIO input/output pairs (0..64)
+    IO_GPIO_NUM                  => 64, --8                -- number of GPIO input/output pairs (0..64)
     IO_MTIME_EN                  => true,              -- implement machine system timer (MTIME)?
     IO_UART0_EN                  => true               -- implement primary universal asynchronous receiver/transmitter (UART0)?
   )
@@ -203,6 +204,7 @@ begin
     rstn_i      => rstn_i,      -- global reset, low-active, async
     -- GPIO (available if IO_GPIO_EN = true) --
     gpio_o      => con_gpio_o,  -- parallel output
+    gpio_i      => gpio_i,  -- parallel intput
 	  in_comb_fault_inj_en  => in_comb_fault_inj_en, --sig_comb_fault_inj_en,
     in_sync_fault_inj_en  => in_sync_fault_inj_en, --sig_sync_fault_inj_en
     out_comb_fault_status => out_comb_fault_status,

@@ -3,7 +3,7 @@
   "ip_inst": {
     "xci_name": "jtag_axi_0",
     "component_reference": "xilinx.com:ip:jtag_axi:1.2",
-    "ip_revision": "18",
+    "ip_revision": "20",
     "gen_directory": "../../../../riscv_ft_uart.gen/sources_1/ip/jtag_axi_0",
     "parameters": {
       "component_parameters": {
@@ -41,12 +41,12 @@
       },
       "runtime_parameters": {
         "IPCONTEXT": [ { "value": "IP_Flow" } ],
-        "IPREVISION": [ { "value": "18" } ],
+        "IPREVISION": [ { "value": "20" } ],
         "MANAGED": [ { "value": "TRUE" } ],
         "OUTPUTDIR": [ { "value": "../../../../riscv_ft_uart.gen/sources_1/ip/jtag_axi_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "." } ],
-        "SWVERSION": [ { "value": "2023.2" } ],
+        "SWVERSION": [ { "value": "2024.2" } ],
         "SYNTHESISFLOW": [ { "value": "OUT_OF_CONTEXT" } ]
       }
     },

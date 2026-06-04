@@ -95,10 +95,17 @@ Port (
     --clk_100Mhz  : in std_logic;
     rstn_i      : in  std_ulogic; -- global reset, low-active, async
     -- GPIO --
-    gpio_o      : out std_ulogic_vector(7 downto 0); -- parallel output  
+    gpio_o      : out std_ulogic_vector(7 downto 0); -- parallel output 
     -- UART0 --
     uart0_txd_o : out std_ulogic; -- UART0 send data
-    uart0_rxd_i : in  std_ulogic  -- UART0 receive data
+    uart0_rxd_i : in  std_ulogic;  -- UART0 receive data
+        -- XADC analog inputs (NEW)--
+    vp_in       : in  std_logic;    -- VP dedicated analog input
+    vn_in       : in  std_logic    -- VN dedicated analog input
+--    vauxp0      : in  std_logic;    -- VAUX0 positive
+--    vauxn0      : in  std_logic;    -- VAUX0 negative
+--    vauxp1      : in  std_logic;    -- VAUX1 positive
+--    vauxn1      : in  std_logic     -- VAUX1 negative
  );
 end neorv32_ft_uart_top;
 
@@ -119,6 +126,20 @@ signal out_spike_sync  : std_logic_vector (5 downto 0);
 signal clk_i : std_logic;
 signal clk_100mhz, clk_200mhz : std_logic;
 signal locked : std_logic;
+
+--XADC result signals--
+signal xadc_data_vp_vn  : std_logic_vector(15 downto 0);
+--signal xadc_data_vaux0  : std_logic_vector(15 downto 0);
+--signal xadc_data_vaux1  : std_logic_vector(15 downto 0);
+signal xadc_eoc         : std_logic;
+signal xadc_eos         : std_logic;
+signal xadc_busy        : std_logic;
+signal xadc_channel     : std_logic_vector(4 downto 0);
+signal xadc_alarm       : std_logic;
+
+--GPIO signals: output (from CPU) + input (to CPU from XADC)--
+signal con_gpio_o        : std_ulogic_vector(63 downto 0);
+signal con_gpio_i        : std_ulogic_vector(63 downto 0);
 
 ---keep attribute for the test and debug purpose of the signals  
 attribute keep : boolean;
@@ -154,6 +175,55 @@ clock_gen_100mhz : clk_wiz_0
    clk_in1_p => clk_in1_p,
    clk_in1_n => clk_in1_n
  );
+ 
+ --XADC Controller instantiation--
+xadc_ctrl_inst : entity work.xadc_controller
+port map (
+  clk_i           => clk_100mhz,
+  rstn_i          => rstn_i,
+  vp_in           => vp_in,
+  vn_in           => vn_in,
+--  vauxp0          => vauxp0,
+--  vauxn0          => vauxn0,
+--  vauxp1          => vauxp1,
+--  vauxn1          => vauxn1,
+  xadc_data_vp_vn => xadc_data_vp_vn,
+--  xadc_data_vaux0 => xadc_data_vaux0,
+--  xadc_data_vaux1 => xadc_data_vaux1,
+  xadc_eoc        => xadc_eoc,
+  xadc_eos        => xadc_eos,
+  xadc_busy       => xadc_busy,
+  xadc_channel    => xadc_channel,
+  xadc_alarm      => xadc_alarm
+);
+
+--Map XADC results into GPIO inputs read by CPU--
+-- The C program reads these via neorv32_gpio_pin_get()
+--   gpio_i[0..7]   = VP/VN  high byte (bits 15:8)
+--   gpio_i[8..15]  = VP/VN  low byte  (bits  7:0)
+--   gpio_i[16..23] = VAUX0  high byte
+--   gpio_i[24..31] = VAUX0  low byte
+--   gpio_i[32..39] = VAUX1  high byte
+--   gpio_i[40..47] = VAUX1  low byte
+--   gpio_i[48]     = xadc_busy
+--   gpio_i[49]     = xadc_eoc
+--   gpio_i[50]     = xadc_eos
+con_gpio_i(7  downto 0)  <= std_ulogic_vector(xadc_data_vp_vn(15 downto 8));
+con_gpio_i(15 downto 8)  <= std_ulogic_vector(xadc_data_vp_vn(7  downto 0));
+con_gpio_i(16)           <= std_ulogic(xadc_busy);
+con_gpio_i(17)           <= std_ulogic(xadc_eoc);
+con_gpio_i(18)           <= std_ulogic(xadc_eos);
+con_gpio_i(19)           <= std_ulogic(xadc_alarm);
+con_gpio_i(63 downto 20) <= (others => '0');
+--con_gpio_i(23 downto 16) <= std_ulogic_vector(xadc_data_vaux0(15 downto 8));
+--con_gpio_i(31 downto 24) <= std_ulogic_vector(xadc_data_vaux0(7  downto 0));
+--con_gpio_i(39 downto 32) <= std_ulogic_vector(xadc_data_vaux1(15 downto 8));
+--con_gpio_i(47 downto 40) <= std_ulogic_vector(xadc_data_vaux1(7  downto 0));
+--con_gpio_i(48)            <= std_ulogic(xadc_busy);
+--con_gpio_i(49)            <= std_ulogic(xadc_eoc);
+--con_gpio_i(50)            <= std_ulogic(xadc_eos);
+--con_gpio_i(63 downto 51) <= (others => '0');
+
 ----------------------NEORV32 instantiation----------------------
 -----------------------------------------------------------------
 /*neorv32_test_setup_approm_inst: neorv32_test_setup_approm
@@ -286,6 +356,7 @@ neorv32_test_setup_bootloader_inst: neorv32_test_setup_bootloader
     rstn_i   => rstn_i,--   : in  std_ulogic; -- global reset, low-active, async
     -- GPIO --
     gpio_o   => gpio_o,--   : out std_ulogic_vector(7 downto 0) -- parallel output
+    gpio_i   => con_gpio_i,
     in_comb_fault_inj_en => sig_comb_fault_inj_en,
     in_sync_fault_inj_en => sig_sync_fault_inj_en,
     out_comb_fault_status => sig_comb_fault_status,

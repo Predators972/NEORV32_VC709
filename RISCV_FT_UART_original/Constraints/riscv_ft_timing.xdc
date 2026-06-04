@@ -6,13 +6,11 @@ set_property IOSTANDARD LVCMOS18 [get_ports rstn_i]
 
 # create_clock -name clk_ref_200mhz -period 5 [get_ports clk_in1_p]
 
-set_property IOSTANDARD DIFF_SSTL15 [get_ports clk_in1_p]
-
-set_property IOSTANDARD DIFF_SSTL15 [get_ports clk_in1_n]
 set_property PACKAGE_PIN H19 [get_ports clk_in1_p]
 set_property PACKAGE_PIN G18 [get_ports clk_in1_n]
 
-
+set_property IOSTANDARD DIFF_SSTL15 [get_ports clk_in1_p]
+set_property IOSTANDARD DIFF_SSTL15 [get_ports clk_in1_n]
 
 
 # create_generated_clock -name clk_100mhz -source [get_pins clock_gen_100mhz/clk_in1_p] -divide_by 2 [get_pins clock_gen_100mhz/clk_out1]
@@ -91,3 +89,10 @@ set_property -dict {PACKAGE_PIN AU39 IOSTANDARD LVCMOS18} [get_ports {gpio_o[0]}
 #set_property CONFIG_VOLTAGE 1V [current_design]
 
 
+# XADC Analog Inputs (VP/VN)
+# These are internal dedicated pins - NO PACKAGE_PIN needed
+# Vivado handles them automatically via the XADC IP
+
+# False path on analog inputs (no timing constraint needed)
+set_false_path -from [get_ports vp_in]
+set_false_path -from [get_ports vn_in]
