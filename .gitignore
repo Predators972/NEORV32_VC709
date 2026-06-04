@@ -1,0 +1,94 @@
+# =========================================================
+# .gitignore for NEORV32 VC709 Project
+# Xilinx Vivado + RISC-V Development
+# =========================================================
+
+# ----- Vivado Generated Files (Synthesis, Implementation, Simulation) -----
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+*.Xil/
+.Xil/
+xsim.dir/
+webtalk.jou
+webtalk.log
+vivado*.jou
+vivado*.log
+hs_err_pid*.log
+usage_statistics_webtalk.*
+
+# ----- Vivado Checkpoints & Reports -----
+*.dcp
+*.rpt
+*.xml
+
+# ----- Simulation Results -----
+*.wdb
+*.pb
+*.vcd
+*.saif
+*.fst
+*.ghw
+
+# ----- IP Cores (keep .xci, ignore generated) -----
+RISCV_FT_UART_original/.srcs/sources_1/ip/*/*
+!RISCV_FT_UART_original/.srcs/sources_1/ip/*/
+!RISCV_FT_UART_original/.srcs/sources_1/ip/*/*.xci
+
+# ----- Bitstreams & Artifacts (uncomment if you don't want to version) -----
+# *.bit
+# *.ltx
+
+# ----- RISC-V Build Artifacts -----
+*.elf
+*.hex
+*.o
+*.a
+*.bin
+neorv32_exe.bin
+*_image.vhd
+*_wrapper.v
+build/
+*.out
+*.asm
+
+# ----- Vivado Utilities -----
+.srcs/utils_1/
+
+# ----- Logs & Temporary Files -----
+*.bak
+*.tmp
+*.log
+*.jou
+*~
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ----- Editors & IDEs -----
+.vscode/
+.idea/
+*.sublime-*
+*.sublime-project
+*.sublime-workspace
+
+# ----- Python & Build Tools -----
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# ----- OS Files -----
+.DS_Store
+Thumbs.db
+*.lnk
+
+# ----- GDB & Debugging -----
+.gdbinit
+*.gdb*
+
+# ----- Keep important files -----
+!.gitkeep
