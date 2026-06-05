@@ -1,0 +1,4 @@
+[submodule "Application-images/Bootloader_Upload_Tool"]
+	path = Application-images/Bootloader_Upload_Tool
+	url = https://github.com/Damien-Bureau/neorv32-serial-runner.git
+	branch = main

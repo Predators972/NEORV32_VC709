@@ -71,6 +71,7 @@ NEORV32_VC709/
 │   ├── 0_blink_led_terminal_access/ # Example: Basic I/O control
 │   ├── 0_Fibonacci/                 # Example: Integer computation
 │   ├── 0_quick_sort/                # Example: Algorithm benchmark
+│   ├── Bootloader_Upload_Tool/      # Submodule: UART bootloader upload utility
 │   ├── xadc_uart_leds/              # ADC → UART + LED
 │
 ├── RISCV_FT_UART_original/          # FPGA design (Vivado project)
@@ -92,6 +93,22 @@ NEORV32_VC709/
 - RISC-V GCC Toolchain
 - VC709 Board + USB-UART cable
 - Serial terminal (Tera Term)
+
+### Installation
+Clone the repository:
+```bash
+git clone https://github.com/Predators972/NEORV32_VC709.git
+```
+
+**Optional:** If you want the Bootloader Upload Tool (submodule), clone with:
+```bash
+git clone --recurse-submodules https://github.com/Predators972/NEORV32_VC709.git
+```
+
+If you already cloned it and forgot the `--recurse-submodules`, initialize the submodule with:
+```bash
+git submodule update --init --recursive
+```
 
 ### Setup (10 minutes)
 See detailed guides in the [Documentation](Documentation) folder  
@@ -148,10 +165,7 @@ Follow instruction in the first documentation [ENVIRONMENT_Toolchain_Bootloader.
 
 ### Tools
 - **RISC-V GCC Toolchain**: https://github.com/stnolting/riscv-gcc-prebuilt
-- **Bootloader Upload Tool**: https://github.com/Damien-Bureau/neorv32-serial-runner
-
----
-
-**Project Status**: Active  
-**Last Updated**: 06/2026  
-**Version**: 1.0
+- **Bootloader Upload Tool**: 
+  - Repository: https://github.com/Damien-Bureau/neorv32-serial-runner
+  - Location: [Application-images/Bootloader_Upload_Tool](Application-images\Bootloader_Upload_Tool) (submodule)
+  
