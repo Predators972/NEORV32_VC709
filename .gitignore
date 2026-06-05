@@ -48,7 +48,6 @@ RISCV_FT_UART_original/.srcs/sources_1/ip/*/*
 *.a
 *.bin
 neorv32_exe.bin
-*_image.vhd
 *_wrapper.v
 build/
 *.out
