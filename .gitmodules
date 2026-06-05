@@ -2,3 +2,6 @@
 	path = Application-images/Bootloader_Upload_Tool
 	url = https://github.com/Damien-Bureau/neorv32-serial-runner.git
 	branch = main
+[submodule "Application-images/neorv32"]
+	path = Application-images/neorv32
+	url = https://github.com/stnolting/neorv32/
