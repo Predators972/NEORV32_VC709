@@ -44,9 +44,93 @@ The application reads analog voltage from the XADC (Xilinx Analog-to-Digital Con
 
 ---
 
-## Code Structure
+## Application Architecture
 
-### Helper Functions
+### Data Flow Diagram - Hardware to CPU
+ 
+```mermaid
+graph LR
+    A["Analog Signal<br/>J19 VP/VN"] -->|Analog<br/>0-1.0V| B["XADC IP<br/>Converter"]
+    B -->|12-bit ADC| C["xadc_controller<br/>DRP Interface"]
+    C -->|16-bit Data<br/>GPIO Input| D["RISC-V CPU<br/>GPIO Peripheral"]
+```
+ 
+#### GPIO Input Bit Distribution (64-bit total)
+ 
+The `xadc_controller` routes ADC results to the **GPIO Input** of the CPU:
+ 
+| GPIO Bits | Source | Description |
+|-----------|--------|-------------|
+| [7:0] | xadc_data_vp_vn[15:8] | ADC high byte |
+| [15:8] | xadc_data_vp_vn[7:0] | ADC low byte |
+| [16] | xadc_busy | Busy flag (ADC converting) |
+| [17] | xadc_eoc | End of Conversion flag |
+| [18] | xadc_eos | End of Sequence flag |
+| [19] | xadc_alarm | Alarm condition flag |
+| [63:20] | GND (tied to 0) | Reserved / Unused (44 bits) |
+ 
+**VHDL Connection** (in `neorv32_ft_uart_top.vhd`):
+```vhdl
+con_gpio_i(7:0)   <= xadc_data_vp_vn(15:8);   -- ADC high byte
+con_gpio_i(15:8)  <= xadc_data_vp_vn(7:0);    -- ADC low byte
+con_gpio_i(16)    <= xadc_busy;                -- Status flags
+con_gpio_i(17)    <= xadc_eoc;
+con_gpio_i(18)    <= xadc_eos;
+con_gpio_i(19)    <= xadc_alarm;
+con_gpio_i(63:20) <= (others => '0');          -- Unused
+```
+
+
+### Application Execution (One Read Cycle)
+ 
+```mermaid
+sequenceDiagram
+    participant INPUT as INPUT
+    participant APP as Application
+    participant OUTPUT as OUTPUT
+    
+    INPUT->>APP: Read ADC Data (16-bit)
+    APP->>APP: Process & Convert Data
+    APP->>OUTPUT: Write LED Value (8-bit)
+    APP->>OUTPUT: Send Formatted Data
+```
+ 
+### Program Flow
+ 
+```mermaid
+graph TD
+    A["Start"] --> B["Initialize UART<br/>& GPIO"]
+    B --> C["Display Banner<br/>& Commands"]
+    C --> G{"User Input ?"}
+    G -->|No| G1["Delay 100ms"]
+    G -->|Yes| D[/"Last Input"/]
+ 
+    G1 --> G
+ 
+    D -->|'s'| E["Start ADC Sampling<br/>Mode"]
+    D -->|'e'| F["Start LED Counter<br/>Test Mode"]
+    
+    E --> E1["Read GPIO Input"]
+    E1 --> E2["Extract ADC Bytes<br/>& Status Flags"]
+    E2 --> E3["Convert to Voltage"]
+    E3 --> E4["Set LED Output"]
+    E4 --> E5["Print UART Output"]
+    E5 --> E6["Delay 500ms"]
+    E6 --> D
+    
+    F --> F1["Set LED Counter"]
+    F1 --> F2["Print UART<br/>Counter in Binary"]
+    F2 --> F3["Increment Counter"]
+    F3 --> F4{"Counter<br/>> 255?"}
+    F4 -->|Yes| F5["Reset Counter to 0<br/>"]
+    F4 -->|No| F6
+    F5 --> F6["Delay 250ms"]
+    F6 --> D
+```
+
+---
+
+## Code Structure
 
 #### GPIO Reading
 ```c
@@ -58,10 +142,7 @@ Reads the entire 64-bit GPIO input buffer (contains ADC data + status flags).
 ```c
 static uint16_t xadc_read_raw(void)
 ```
-- Extracts bytes 0-1 from GPIO input
-- Returns 16-bit raw ADC value
-- Actual ADC data: bits [11:0] (12-bit)
-- Data format: left-aligned in 16-bit word
+- ADC data: bits [11:0] (12-bit)
 
 #### Status Flags
 ```c
@@ -73,33 +154,33 @@ static int xadc_alarm(void)   // Bit 19: Alarm condition
 
 #### Voltage Conversion
 ```c
-static float xadc_to_voltage(uint16_t raw)
+static uint16_t xadc_to_voltage_mv(uint16_t raw)
 ```
-Converts 12-bit ADC value to voltage:
+Converts 12-bit ADC value to voltage in millivolts using integer-only arithmetic:
+```c
+uint16_t adc12 = raw >> 4;
+return (uint16_t)(((uint32_t)adc12 * 1000) >> 12);
 ```
-voltage_V = (raw >> 4) / 4096 × 1.0
-```
-- Shift right 4 bits to get 12-bit value
-- Divide by 4096 (2^12)
-- Multiply by reference voltage (1.0V)
+- Shift right 4 bits to extract 12-bit ADC value
+- Multiply by 1000 (using 32-bit to avoid overflow)
+- Shift right 12 bits (equivalent to dividing by 4096)
+- Result in millivolts (0-1000 mV for 0-1.0V range)
 
 #### LED Mapping
+For LED display, voltage is mapped directly from raw ADC value:
 ```c
-static uint8_t voltage_to_leds_8bit(float v)
+uint8_t led_value = raw_vpvn >> 8;
 ```
-Maps voltage to 8-bit LED representation:
-```
-led_value = voltage × 255
-```
-- 0.0V → LEDs = 0x00 (00000000)
-- 0.5V → LEDs ≈ 0x7F (01111111)
-- 1.0V → LEDs = 0xFF (11111111)
+Maps 16-bit raw ADC to 8-bit LED value:
+- 0x000 → LEDs = 0x00 (00000000)
+- 0x800 → LEDs ≈ 0x7F (01111111)
+- 0xFFF → LEDs = 0xFF (11111111)
 
 #### Output Functions
 ```c
 static void print_binary_8bit(uint8_t value)
 static void print_hex32(uint32_t value)
-static void print_voltage(float v)
+static void print_voltage(uint16_t mv)
 ```
 Custom printing functions (no unsupported format strings).
 
