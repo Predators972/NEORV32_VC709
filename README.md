@@ -72,7 +72,9 @@ NEORV32_VC709/
 │   ├── 0_Fibonacci/                 # Example: Integer computation
 │   ├── 0_quick_sort/                # Example: Algorithm benchmark
 │   ├── Bootloader_Upload_Tool/      # Submodule: UART bootloader upload utility
-│   ├── xadc_uart_leds/              # ADC → UART + LED
+│   ├── benchmarking/                # Performance measurement test application
+│   ├── neorv32/                     # Submodule: NEORV32 v1.8.2
+│   └── xadc_uart_leds/              # ADC → UART + LED
 │
 ├── RISCV_FT_UART_original/          # FPGA design (Vivado project)
 │   ├── Constraints/                 # Pin assignments & timing
@@ -89,7 +91,7 @@ NEORV32_VC709/
 ## Quick Start
 
 ### Prerequisites
-- Xilinx Vivado 2023.2
+- Xilinx Vivado 2024.2
 - RISC-V GCC Toolchain
 - VC709 Board + USB-UART cable
 - Serial terminal (Tera Term)
@@ -155,6 +157,8 @@ Follow instruction in the first documentation [ENVIRONMENT_Toolchain_Bootloader.
 
 ### RISC-V & NEORV32
 - **NEORV32 Repository**: https://github.com/stnolting/neorv32
+   - Version used: [NEORV32 v1.8.2](Application-images/neorv32)
+   - Location: [Application-images\neorv32](Application-images/neorv32) (submodule)
 - **NEORV32 Datasheet**: https://stnolting.github.io/neorv32/
 - **NEORV32 User Guide**: https://stnolting.github.io/neorv32/ug/
 
