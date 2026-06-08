@@ -1,13 +1,9 @@
 #include <neorv32.h>
-#include <stdio.h>
 
 #define BAUD_RATE 19200
 #define SAMPLE_DELAY_MS 500
 
-#define XADC_VREF 1.0f
-#define XADC_RESOLUTION 4096.0f
-
-/**********************************************************************//**
+/**************************************************************************
  * XADC Debug Program: UART + LED Display + LED Counter Test
  **************************************************************************/
 
@@ -53,9 +49,9 @@ static int xadc_alarm(void) {
 }
 
 // Convert raw to voltage
-static float xadc_to_voltage(uint16_t raw) {
+static uint16_t xadc_to_voltage_mv(uint16_t raw) {
   uint16_t adc12 = raw >> 4;
-  return (float)adc12 * (XADC_VREF / XADC_RESOLUTION);
+  return (uint16_t)(((uint32_t)adc12 * 1000) >> 12); 
 }
 
 // Print 8-bit value in binary
@@ -63,14 +59,6 @@ static void print_binary_8bit(uint8_t value) {
   for (int i = 7; i >= 0; i--) {
     neorv32_uart0_printf("%d", (value >> i) & 1);
   }
-}
-
-// Convert voltage to 8-bit LED representation
-static uint8_t voltage_to_leds_8bit(float v) {
-  int led_val = (int)(v * 255.0f);
-  if (led_val > 255) led_val = 255;
-  if (led_val < 0) led_val = 0;
-  return (uint8_t)led_val;
 }
 
 // Simple delay helper
@@ -91,8 +79,7 @@ static void print_hex32(uint32_t value) {
 }
 
 // Print voltage nicely
-static void print_voltage(float v) {
-  int mv = (int)(v * 1000.0f);
+static void print_voltage(uint16_t mv) {
   int whole = mv / 1000;
   int frac = mv % 1000;
   neorv32_uart0_printf("%d.%d", whole, frac);
@@ -160,8 +147,8 @@ int main(void) {
       
       // Read ADC value and status
       uint16_t raw_vpvn = xadc_read_raw();
-      float v_vpvn = xadc_to_voltage(raw_vpvn);
-      uint8_t led_value = voltage_to_leds_8bit(v_vpvn);
+      uint16_t mv_vpvn = xadc_to_voltage_mv(raw_vpvn);
+      uint8_t led_value = raw_vpvn >> 8;
       int busy = xadc_busy();
       int eoc = xadc_eoc();
       int eos = xadc_eos();
@@ -173,7 +160,7 @@ int main(void) {
 
       // Print entire line
       neorv32_uart0_printf("  %d | %d | ", sample_count, raw_vpvn);
-      print_voltage(v_vpvn);
+      print_voltage(mv_vpvn);
       neorv32_uart0_printf(" | ");
       print_binary_8bit(led_value);
       neorv32_uart0_printf(" | %d %d %d %d | ", busy, eoc, eos, alarm);
