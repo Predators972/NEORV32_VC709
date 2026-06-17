@@ -1,8 +1,8 @@
-# RISC-V Processor Benchmarking on FPGA
+# RISC-V Processor on FPGA
 
 ## Project Overview
 
-This repository contains a **Summer Internship Project** focused on **developing and evaluating signal processing applications on a RISC-V processor** implemented on an FPGA platform.
+This repository contains a **Summer Internship Project** focused on **developing signal processing applications on a RISC-V processor** implemented on an FPGA platform.
 
 ### Project Objectives
 
@@ -22,36 +22,36 @@ This repository contains a **Summer Internship Project** focused on **developing
    - Implement and test algorithms on RISC-V processor
    - Measure execution speed and real-time performance capabilities
    - Compare different implementation strategies and optimize code
-   - Profile CPU utilization and efficiency
+
+4. **Voice Recognition System Development**
+   - Implement Dynamic Time Warping (DTW) algorithm for audio comparison
+   - Develop real-time keyword spotting (yes/no detection)
+   - Optimize signal processing for memory-constrained embedded systems
+   - Test chunk-by-chunk streaming for continuous recognition
 
 ### Current Status
 - ✅ RISC-V setup and basic examples working
 - ✅ UART bootloader integration complete
 - ✅ ADC (XADC) simulation, integration and testing completed
-- ⏳ Signal processing algorithm implementation (in progress)
-- ⏳ Benchmarking framework and metrics (upcoming)
+- ✅ Signal processing algorithm implementation (in progress)
+- ✅ Benchmarking framework and metrics (upcoming)
+- ✅ Voice recognition with DTW algorithm (simulation phase)
+- ⏳ Real microphone integration (pending hardware)
+- ⏳ Streaming implementation with interrupts (upcoming)
 
 ---
 
-## Project Context
+## Project Context & Contributors
 
-This internship builds upon an **existing VC709 FPGA project** that originally focused on **Fault Injection Testing (FIT)** for RISC-V processors. The current work extends this platform to:
-
-- Add analog signal acquisition capabilities
-- Develop signal processing benchmarks
-- Evaluate real-time performance
-- Create a reusable evaluation platform
+This internship builds upon an **existing VC709 FPGA project** that originally focused on **Fault Injection Testing (FIT)** for RISC-V processors.
 
 **Host Platform**: Xilinx VC709 (Virtex-7 FPGA)  
 **Processor**: NEORV32 RISC-V v1.8.2  
 
-## Contributors
-
 ### Current Team (Summer 2026)
  
-
 - **[Johan](https://github.com/Predators972)** (May - July 2026)
-- **[Damien](https://github.com/Damien-Bureau)** (June - August 2026)
+- **[Damien](https://github.com/Damien-Bureau)** (June 2026)
 
 ### Supervisors/Mentors
 - Jim Harkin - Project Supervisor
@@ -74,6 +74,7 @@ NEORV32_VC709/
 │   ├── Bootloader_Upload_Tool/      # Submodule: UART bootloader upload utility
 │   ├── benchmarking/                # Performance measurement test application
 │   ├── neorv32/                     # Submodule: NEORV32 v1.8.2
+│   ├── voice_recognition_sim        # Simulate speech recognition with DTW algorithm
 │   └── xadc_uart_leds/              # ADC → UART + LED
 │
 ├── RISCV_FT_UART_original/          # FPGA design (Vivado project)
